@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iqra — Quran &amp; Hadith</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B2B2C;
+    --ink-2:#123a3b;
+    --parchment:#F6EFDD;
+    --parchment-2:#EFE6CF;
+    --gold:#B8863B;
+    --gold-bright:#D6AA5C;
+    --teal:#3E7C74;
+    --text-dark:#20302F;
+    --text-mute:#5B6B67;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(182,138,66,.10), transparent 60%),
+      radial-gradient(1000px 700px at 100% 0%, rgba(62,124,116,.18), transparent 55%),
+      var(--ink);
+    color:var(--parchment);
+    font-family:'Lora', serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px 80px;}
+
+  /* ---------- Hero ---------- */
+  header.hero{
+    padding:64px 20px 40px;
+    text-align:center;
+    position:relative;
+  }
+  .corner{
+    position:fixed; width:120px; height:120px; opacity:.35; pointer-events:none; z-index:0;
+  }
+  .corner svg{width:100%;height:100%;}
+  .corner.tl{top:0;left:0;}
+  .corner.tr{top:0;right:0; transform:scaleX(-1);}
+  .corner.bl{bottom:0;left:0; transform:scaleY(-1);}
+  .corner.br{bottom:0;right:0; transform:scale(-1,-1);}
+
+  .star{
+    width:64px; height:64px; margin:0 auto 18px;
+    animation:spin 40s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  @media (prefers-reduced-motion: reduce){ .star{animation:none;} }
+
+  h1.title{
+    font-family:'Amiri', serif;
+    font-size:clamp(2.6rem, 6vw, 4.2rem);
+    margin:0 0 6px;
+    color:var(--parchment);
+    letter-spacing:.02em;
+  }
+  h1.title bdi{ direction: rtl; display:inline-block; color:var(--gold-bright); }
+  .subtitle{
+    font-family:'Inter', sans-serif;
+    font-weight:500;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:.78rem;
+    color:var(--teal);
+    margin:0 0 10px;
+  }
+  .lede{
+    max-width:520px; margin:0 auto;
+    color:#cfe0da;
+    font-style:italic;
+    font-size:1.02rem;
+  }
+
+  .divider{
+    display:flex; align-items:center; gap:14px;
+    margin:44px 0 34px; color:var(--gold);
+    opacity:.8;
+  }
+  .divider::before, .divider::after{
+    content:""; flex:1; height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .divider svg{width:20px;height:20px; flex:none;}
+
+  /* ---------- Panels ---------- */
+  .panel{
+    background: linear-gradient(180deg, var(--parchment), var(--parchment-2));
+    color:var(--text-dark);
+    border-radius:var(--radius);
+    padding:28px 26px 26px;
+    box-shadow:0 20px 50px -20px rgba(0,0,0,.55), inset 0 0 0 1px rgba(184,134,59,.25);
+    position:relative;
+    z-index:1;
+  }
+  .panel + .panel{ margin-top:34px; }
+
+  .panel-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:18px; flex-wrap:wrap;
+  }
+  .panel-head h2{
+    font-family:'Amiri', serif; font-size:1.6rem; margin:0; color:var(--ink-2);
+  }
+  .eyebrow{
+    font-family:'Inter', sans-serif; font-size:.7rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); font-weight:600;
+  }
+
+  .controls{
+    display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;
+  }
+  select, button{
+    font-family:'Inter', sans-serif;
+    font-size:.88rem;
+    border-radius:9px;
+    border:1px solid rgba(32,48,47,.18);
+    padding:9px 13px;
+    background:#fff;
+    color:var(--text-dark);
+  }
+  select{ min-width:150px; cursor:pointer; }
+  button{
+    background:var(--ink-2);
+    color:var(--parchment);
+    border:none;
+    font-weight:600;
+    cursor:pointer;
+    letter-spacing:.02em;
+    transition:transform .15s ease, background .15s ease;
+  }
+  button:hover{ background:var(--teal); }
+  button:active{ transform:scale(.97); }
+  button:focus-visible, select:focus-visible{
+    outline:3px solid var(--gold-bright); outline-offset:2px;
+  }
+  button.secondary{
+    background:transparent; color:var(--ink-2); border:1px solid var(--ink-2);
+  }
+  button.secondary:hover{ background:rgba(18,58,59,.08); color:var(--ink-2); }
+  button[disabled]{ opacity:.55; cursor:progress; }
+
+  .content-box{ min-height:110px; }
+  .arabic{
+    font-family:'Amiri', serif;
+    direction:rtl;
+    text-align:right;
+    font-size:1.75rem;
+    line-height:2.1;
+    color:var(--ink-2);
+    margin:0 0 16px;
+  }
+  .translation{
+    font-size:1.05rem;
+    color:var(--text-dark);
+    margin:0 0 10px;
+    padding-left:14px;
+    border-left:3px solid var(--gold);
+  }
+  .meta{
+    font-family:'Inter', sans-serif;
+    font-size:.78rem;
+    color:var(--text-mute);
+    letter-spacing:.03em;
+  }
+  .meta a{ color:var(--teal); font-weight:600; text-decoration:none; }
+  .meta a:hover{ text-decoration:underline; }
+  .placeholder{ color:var(--text-mute); font-style:italic; }
+  .ayah-row + .ayah-row{
+    margin-top:8px; padding-top:16px;
+    border-top:1px dashed rgba(184,134,59,.35);
+  }
+  .error-msg{ color:#9c3b2e; font-family:'Inter',sans-serif; font-size:.9rem; }
+
+  .skeleton{
+    height:14px; border-radius:6px;
+    background:linear-gradient(90deg, #e5dcc2 25%, #f1e9cf 37%, #e5dcc2 63%);
+    background-size:400% 100%;
+    animation:shimmer 1.4s ease infinite;
+    margin-bottom:10px;
+  }
+  @keyframes shimmer{ 0%{background-position:100% 0;} 100%{background-position:0 0;} }
+
+  footer{
+    text-align:center; margin-top:56px;
+    font-family:'Inter', sans-serif; font-size:.78rem;
+    color:var(--teal);
+  }
+  footer a{ color:var(--gold-bright); }
+</style>
+</head>
+<body>
+
+<div class="corner tl"><svg viewBox="0 0 100 100"><path d="M0 0 L100 0 L100 8 L8 8 L8 100 L0 100 Z" fill="none" stroke="#B8863B" stroke-width="1"/><circle cx="8" cy="8" r="3" fill="#B8863B"/></svg></div>
+<div class="corner tr"><svg viewBox="0 0 100 100"><path d="M0 0 L100 0 L100 8 L8 8 L8 100 L0 100 Z" fill="none" stroke="#B8863B" stroke-width="1"/><circle cx="8" cy="8" r="3" fill="#B8863B"/></svg></div>
+<div class="corner bl"><svg viewBox="0 0 100 100"><path d="M0 0 L100 0 L100 8 L8 8 L8 100 L0 100 Z" fill="none" stroke="#B8863B" stroke-width="1"/><circle cx="8" cy="8" r="3" fill="#B8863B"/></svg></div>
+<div class="corner br"><svg viewBox="0 0 100 100"><path d="M0 0 L100 0 L100 8 L8 8 L8 100 L0 100 Z" fill="none" stroke="#B8863B" stroke-width="1"/><circle cx="8" cy="8" r="3" fill="#B8863B"/></svg></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="star" aria-hidden="true">
+      <svg viewBox="0 0 100 100">
+        <g fill="none" stroke="#D6AA5C" stroke-width="2.5">
+          <polygon points="50,4 61,39 98,39 68,60 79,96 50,74 21,96 32,60 2,39 39,39"/>
+        </g>
+      </svg>
+    </div>
+    <p class="subtitle">Quran &amp; Hadith, side by side</p>
+    <h1 class="title">Iqra <bdi>اقرأ</bdi></h1>
+    <p class="lede">Pull a verse and a saying, each with its Arabic and a plain-English rendering — read one, or let both arrive together as your verse and hadith of the day.</p>
+  </header>
+
+  <main class="wrap" style="padding:0;">
+
+    <!-- AYAH PANEL -->
+    <section class="panel" id="ayah-panel">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">The Quran</div>
+          <h2>Ayah</h2>
+        </div>
+      </div>
+
+      <div class="controls">
+        <select id="surah-select" aria-label="Choose a surah"></select>
+        <select id="ayah-select" aria-label="Choose a starting ayah"></select>
+        <button id="fetch-ayah-btn">Get 5 ayat from here</button>
+        <button id="random-ayah-btn" class="secondary">Surprise me</button>
+      </div>
+
+      <div class="content-box" id="ayah-content">
+        <p class="placeholder">Pick a surah and starting ayah, or tap "Surprise me" — either way you'll get 5 ayat together.</p>
+      </div>
+    </section>
+
+    <div class="divider" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><polygon points="50,10 61,39 92,39 66,58 76,90 50,71 24,90 34,58 8,39 39,39" fill="#B8863B"/></svg>
+    </div>
+
+    <!-- HADITH PANEL -->
+    <section class="panel" id="hadith-panel">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">The Hadith</div>
+          <h2>Narration</h2>
+        </div>
+      </div>
+
+      <div class="controls">
+        <select id="book-select" aria-label="Choose a hadith collection"></select>
+        <button id="random-hadith-btn">Get a random hadith</button>
+      </div>
+
+      <div class="content-box" id="hadith-content">
+        <p class="placeholder">Choose a collection and fetch a random narration, in Arabic and English.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Ayah text &amp; translation via <a href="https://alquran.cloud/api" target="_blank" rel="noopener">AlQuran Cloud</a> ·
+    Hadith via <a href="https://github.com/fawazahmed0/hadith-api" target="_blank" rel="noopener">Hadith API (fawazahmed0)</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const QURAN_API = "https://api.alquran.cloud/v1";
+  // Easy-to-read English translation edition (Sahih International)
+  const TRANSLATION_EDITION = "en.sahih";
+  // How many ayat to pull together
+  const AYAH_GROUP_SIZE = 5;
+
+  // Static JSON on jsdelivr's CDN — reliable CORS headers, no server to go down.
+  const HADITH_CDN = "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions";
+
+  const surahSelect = document.getElementById('surah-select');
+  const ayahSelect = document.getElementById('ayah-select');
+  const fetchAyahBtn = document.getElementById('fetch-ayah-btn');
+  const randomAyahBtn = document.getElementById('random-ayah-btn');
+  const ayahContent = document.getElementById('ayah-content');
+
+  const bookSelect = document.getElementById('book-select');
+  const randomHadithBtn = document.getElementById('random-hadith-btn');
+  const hadithContent = document.getElementById('hadith-content');
+
+  let surahs = [];
+
+  function skeletonHTML(){
+    return `
+      <div class="skeleton" style="width:70%;height:26px;"></div>
+      <div class="skeleton" style="width:95%;"></div>
+      <div class="skeleton" style="width:60%;"></div>
+    `;
+  }
+
+  function errorHTML(msg){
+    return `<p class="error-msg">Couldn't load that right now (${msg}). Please try again.</p>`;
+  }
+
+  /* ---------------- QURAN (5 ayat at a time) ---------------- */
+
+  async function loadSurahList(){
+    try{
+      const res = await fetch(`${QURAN_API}/surah`);
+      const data = await res.json();
+      surahs = data.data;
+      surahSelect.innerHTML = surahs.map(s =>
+        `<option value="${s.number}">${s.number}. ${s.englishName} — ${s.englishNameTranslation}</option>`
+      ).join('');
+      populateAyahSelect(surahs[0].numberOfAyahs);
+    }catch(e){
+      surahSelect.innerHTML = `<option>Surah list unavailable</option>`;
+    }
+  }
+
+  function populateAyahSelect(count){
+    let opts = '';
+    for(let i=1;i<=count;i++){ opts += `<option value="${i}">Ayah ${i}</option>`; }
+    ayahSelect.innerHTML = opts;
+  }
+
+  surahSelect.addEventListener('change', () => {
+    const s = surahs.find(x => x.number == surahSelect.value);
+    if(s) populateAyahSelect(s.numberOfAyahs);
+  });
+
+  // Fetches the whole surah (one request) and slices out AYAH_GROUP_SIZE
+  // consecutive ayat starting at startAyah, clamped so it never runs past
+  // the end of the surah.
+  async function fetchAyahGroup(surahNum, startAyah){
+    ayahContent.innerHTML = skeletonHTML();
+    fetchAyahBtn.disabled = true;
+    randomAyahBtn.disabled = true;
+    try{
+      const res = await fetch(`${QURAN_API}/surah/${surahNum}/editions/quran-uthmani,${TRANSLATION_EDITION}`);
+      const json = await res.json();
+      const [arabicEd, transEd] = json.data;
+      const total = arabicEd.ayahs.length;
+      let start = Math.min(Math.max(1, parseInt(startAyah, 10) || 1), total);
+      // slide the window back if it would run off the end of the surah
+      if(start + AYAH_GROUP_SIZE - 1 > total){
+        start = Math.max(1, total - AYAH_GROUP_SIZE + 1);
+      }
+      const endInclusive = Math.min(start + AYAH_GROUP_SIZE - 1, total);
+
+      // keep the dropdowns in sync with what actually got fetched
+      surahSelect.value = arabicEd.number;
+      ayahSelect.value = start;
+
+      const group = [];
+      for(let n = start; n <= endInclusive; n++){
+        const a = arabicEd.ayahs.find(x => x.numberInSurah === n);
+        const t = transEd.ayahs.find(x => x.numberInSurah === n);
+        if(a && t) group.push({ arabic: a.text, translation: t.text, numberInSurah: n });
+      }
+
+      renderAyahGroup({
+        group,
+        label: `Surah ${arabicEd.number} · ${arabicEd.englishName} — Ayat ${start}–${endInclusive}`
+      });
+    }catch(e){
+      ayahContent.innerHTML = errorHTML(e.message || 'network error');
+    }finally{
+      fetchAyahBtn.disabled = false;
+      randomAyahBtn.disabled = false;
+    }
+  }
+
+  function renderAyahGroup({group, label}){
+    const rows = group.map(a => `
+      <div class="ayah-row">
+        <p class="arabic">${a.arabic}</p>
+        <p class="translation">${a.translation}</p>
+        <p class="meta" style="margin-bottom:14px;">Ayah ${a.numberInSurah}</p>
+      </div>
+    `).join('');
+    ayahContent.innerHTML = `
+      ${rows}
+      <p class="meta">${label} · Sahih International translation</p>
+    `;
+  }
+
+  fetchAyahBtn.addEventListener('click', () => {
+    fetchAyahGroup(surahSelect.value, ayahSelect.value);
+  });
+
+  randomAyahBtn.addEventListener('click', () => {
+    if(!surahs.length) return;
+    const s = surahs[Math.floor(Math.random() * surahs.length)];
+    const maxStart = Math.max(1, s.numberOfAyahs - AYAH_GROUP_SIZE + 1);
+    const start = Math.floor(Math.random() * maxStart) + 1;
+    populateAyahSelect(s.numberOfAyahs);
+    fetchAyahGroup(s.number, start);
+  });
+
+  /* ---------------- HADITH ---------------- */
+  // Each collection is downloaded once (as compact "min.json") and cached
+  // in memory, so "get a random hadith" afterwards is instant and never
+  // has to guess at how many hadith a book contains.
+
+  const BOOKS = [
+    { id: 'bukhari', name: 'Sahih al-Bukhari' },
+    { id: 'muslim', name: 'Sahih Muslim' },
+    { id: 'abudawud', name: 'Sunan Abu Dawud' },
+    { id: 'tirmidhi', name: 'Jami at-Tirmidhi' },
+    { id: 'nasai', name: "Sunan an-Nasa'i" },
+    { id: 'ibnmajah', name: 'Sunan Ibn Majah' },
+    { id: 'malik', name: 'Muwatta Malik' },
+    { id: 'ahmad', name: 'Musnad Ahmad' }
+  ];
+
+  const bookCache = {}; // id -> { arabic: [...], english: [...] }
+
+  function loadBookList(){
+    bookSelect.innerHTML = BOOKS.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+  }
+
+  async function loadBookData(id){
+    if(bookCache[id]) return bookCache[id];
+    const [arRes, enRes] = await Promise.all([
+      fetch(`${HADITH_CDN}/ara-${id}.min.json`),
+      fetch(`${HADITH_CDN}/eng-${id}.min.json`)
+    ]);
+    if(!arRes.ok || !enRes.ok) throw new Error('collection unavailable');
+    const [arJson, enJson] = await Promise.all([arRes.json(), enRes.json()]);
+    const data = { arabic: arJson.hadiths || [], english: enJson.hadiths || [] };
+    bookCache[id] = data;
+    return data;
+  }
+
+  async function fetchRandomHadith(){
+    const book = BOOKS.find(b => b.id === bookSelect.value) || BOOKS[0];
+    hadithContent.innerHTML = skeletonHTML();
+    randomHadithBtn.disabled = true;
+    try{
+      const data = await loadBookData(book.id);
+      if(!data.english.length) throw new Error('no data');
+      const pick = data.english[Math.floor(Math.random() * data.english.length)];
+      const arabicMatch = data.arabic.find(h => h.hadithnumber === pick.hadithnumber);
+      renderHadith({
+        arabic: arabicMatch ? arabicMatch.text : '',
+        english: pick.text,
+        label: `${book.name} · Hadith #${pick.hadithnumber}`,
+        fullUrl: sunnahUrl(book.id, pick)
+      });
+    }catch(e){
+      hadithContent.innerHTML = errorHTML(e.message || 'network error');
+    }finally{
+      randomHadithBtn.disabled = false;
+    }
+  }
+
+  // The free API's stored English text is sometimes cut short (a data
+  // issue in the source itself, not something we can fetch our way around),
+  // so every hadith links out to the full, complete text on sunnah.com.
+  // Muwatta Malik uses a /book/hadith path there; everything else uses the
+  // continuous collection:number form.
+  function sunnahUrl(bookId, hadith){
+    const ref = hadith.reference || {};
+    if(bookId === 'malik' && ref.book != null && ref.hadith != null){
+      return `https://sunnah.com/malik/${ref.book}/${ref.hadith}`;
+    }
+    return `https://sunnah.com/${bookId}:${hadith.hadithnumber}`;
+  }
+
+  function renderHadith({arabic, english, label, fullUrl}){
+    hadithContent.innerHTML = `
+      ${arabic ? `<p class="arabic">${arabic}</p>` : ''}
+      <p class="translation">${english}</p>
+      <p class="meta">${label}${fullUrl ? ` · <a href="${fullUrl}" target="_blank" rel="noopener">Read full hadith on sunnah.com &rarr;</a>` : ''}</p>
+    `;
+  }
+
+  randomHadithBtn.addEventListener('click', fetchRandomHadith);
+
+  /* ---------------- INIT ---------------- */
+
+  loadBookList();
+  loadSurahList();
+})();
+</script>
+</body>
+</html>
